@@ -16,12 +16,12 @@ Adafruit_BMP280 bmp;
 // ==========================================
 // 2. NETWORK CREDENTIALS & RENDER URL
 // ==========================================
-const char* ssid     = "Sukhoi-57";
-const char* password = "99623454569";
+const char* ssid     = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
 
 // Replace this with your actual Render URL when deployed
-const char* SERVER_URL_TELEMETRY = "https://geo-polymer-brick-backend.onrender.com/api/telemetry";
-const char* SERVER_URL_COMMAND   = "https://geo-polymer-brick-backend.onrender.com/api/command";
+const char* SERVER_URL_TELEMETRY = "https://YOUR-BACKEND.onrender.com/api/telemetry";
+const char* SERVER_URL_COMMAND   = "https://YOUR-BACKEND.onrender.com/api/command";
 
 unsigned long lastMillis = 0;
 const long interval = 2000; // 2 seconds telemetry interval
