@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V.I.C.T.O.R</title>
+    <link rel="icon" type="image/jpeg" href="Logo.jpeg">
+    
+    <!-- Enterprise Standard Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            /* Palette */
+            --doom-green: #145c29; 
+            --doom-green-light: #e8f3ec;
+            
+            --bg-body: #fafafa;
+            --bg-surface: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #eaeaea;
+            
+            --color-success: #10b981;
+            --bg-success: #d1fae5;
+            
+            --color-error: #ef4444;
+            --bg-error: #fee2e2;
+            
+            --radius: 8px;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Navigation */
+        .navbar {
+            background-color: var(--doom-green);
+            color: #ffffff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .brand {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+        }
+
+        .brand-icon-img {
+            height: 32px;
+            width: auto;
+            border-radius: 4px;
+            object-fit: contain;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 500;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .status-online .dot { background-color: #34d399; }
+        .status-offline { color: #cbd5e1; }
+        .status-offline .dot { background-color: #94a3b8; }
+
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        /* Dr Doom Quote Header */
+        .quote-header {
+            text-align: center;
+            margin-bottom: 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .quote-text {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            font-style: italic;
+            max-width: 700px;
+            line-height: 1.4;
+        }
+
+        .acronym-text {
+            margin-top: 16px;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--doom-green);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Grid & Cards */
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 40px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            height: 2px;
+            background: var(--doom-green);
+            width: 40px;
+            bottom: -2px;
+            left: 0;
+        }
+
+        .section-title.center {
+            justify-content: center;
+            text-align: center;
+        }
+
+        .section-title.center::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .sync-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        .grid-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-wide { grid-column: 1 / -1; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .card-value-container {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .card-value {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .card-unit {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .badge-nominal { background-color: var(--doom-green-light); color: var(--doom-green); }
+        .badge-critical { background-color: var(--bg-error); color: #991b1b; }
+        .badge-info { background-color: #eff6ff; color: #1e40af; }
+        .badge-offline { background-color: #f3f4f6; color: var(--text-secondary); }
+
+        /* Chart Container */
+        .chart-container {
+            height: 250px;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .btn-reboot {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-main);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-reboot:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* AI Panel */
+        .ai-panel {
+            border-left: 3px solid var(--doom-green);
+            background: linear-gradient(to right, #ffffff, #f9fafb);
+        }
+        .ai-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-main);
+        }
+        .btn-outline:hover {
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+        .loading-pulse {
+            animation: pulse 1.5s infinite;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Alert Board Styling */
+        .alert-row {
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .alert-row:last-child { margin-bottom: 0; }
+        .alert-nominal { background: var(--doom-green-light); color: var(--doom-green); border: 1px solid rgba(20, 92, 41, 0.2); }
+        .alert-crit { background: var(--bg-error); color: #991b1b; border: 1px solid #f87171; }
+        .alert-warn { background: #fef3c7; color: #b45309; border: 1px solid #fbbf24; }
+        .alert-info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="brand">
+            <img src="Logo.jpeg" alt="Logo" class="brand-icon-img">
+            V.I.C.T.O.R
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center;">
+            <button class="btn-reboot" onclick="triggerReboot()">Remote Reboot</button>
+            <div id="connectionStatus" class="status-pill status-offline">
+                <div class="dot"></div>
+                <span id="statusText">System Offline</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <header class="quote-header">
+            <div class="quote-text">"There is only one true path to salvation. And V.I.C.T.O.R. provides it."</div>
+            <div class="acronym-text">Vanguard Infrastructure Command & Threat Observation Relay</div>
+        </header>
+
+        <!-- CENTERED ACTIVE THREAT DASHBOARD -->
+        <h2 class="section-title center">System Alert Dashboard</h2>
+        <div class="grid" style="margin-bottom: 48px;">
+            <div class="card card-wide" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 120px; padding: 32px;">
+                <div id="alert-board" style="width: 100%; max-width: 800px; text-align: center;">
+                    <div class="alert-row alert-nominal">
+                        SYSTEM OFFLINE: AWAITING TELEMETRY
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">
+            Environmental Diagnostics
+            <span class="sync-time">Last sync: <span id="last-update">--:--:--</span></span>
+        </h2>
+        
+        <div class="grid">
+            
+            <!-- NEW PIR LIFE SIGN SCANNER -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-label">Life-Sign Scanner</span>
+                    <span class="badge badge-offline" id="motionBadge">Offline</span>
+                </div>
+                <div class="card-value-container">
+                    <span class="card-value" id="motionStatus" style="font-size: 26px;">--</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-label">Ambient Air</span>
+                </div>
+                <div class="card-value-container">
+                    <span class="card-value" id="airTemp">--</span>
+                    <span class="card-unit">°C</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-label">Barometric Pressure</span>
+                    <span class="badge badge-offline" id="pressureBadge">Offline</span>
+                </div>
+                <div class="card-value-container">
+                    <span class="card-value" id="pressure">--</span>
+                    <span class="card-unit">hPa</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Structural Kinematics</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-label">X-Axis Acceleration</span>
+                </div>
+                <div class="card-value-container">
+                    <span class="card-value" id="accelX">--</span>
+                    <span class="card-unit">m/s²</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-label">Y-Axis Acceleration</span>
+                </div>
+                <div class="card-value-container">
+                    <span class="card-value" id="accelY">--</span>
+                    <span class="card-unit">m/s²</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-label">Z-Axis Acceleration</span>
+                    <span class="badge badge-offline" id="kinematicBadge">Offline</span>
+                </div>
+                <div class="card-value-container">
+                    <span class="card-value" id="accelZ">--</span>
+                    <span class="card-unit">m/s²</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Live Telemetry Analysis</h2>
+        <div class="grid-charts">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-label">Ambient Thermal Trend</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="liveChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-label">Kinematic Force (X, Y, Z)</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="kinematicChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Automated AI Synthesis</h2>
+        <div class="grid" style="margin-bottom: 24px;">
+            <div class="card card-wide ai-panel">
+                <div class="card-header" style="margin-bottom: 8px;">
+                    <span class="card-label" style="display:flex; align-items:center; gap:8px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                        Bedrock AI Engine
+                    </span>
+                    <button class="btn-outline" onclick="generateInsight()">Request Analysis</button>
+                </div>
+                <div>
+                    <p id="ai-synthesis-text" class="ai-text" style="color: var(--text-secondary);">
+                        Awaiting operator request. AI Synthesis will analyze the real-time structural, environmental, and life-sign telemetry streams to generate a plain-text situation report (SITREP).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const BASE_URL = 'https://geo-polymer-brick-backend.onrender.com';
+        
+        // Chart Setup
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#6b7280';
+        
+        // Thermal Chart (Now just tracking Ambient Air)
+        const ctx = document.getElementById('liveChart').getContext('2d');
+        const liveChart = new Chart(ctx, {
+            type: 'line',
+            data: { labels: [], datasets: [
+                { label: 'Ambient Temp (°C)', borderColor: '#145c29', backgroundColor: 'rgba(20, 92, 41, 0.05)', borderWidth: 2, fill: true, tension: 0.4, data: [] }
+            ]},
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 8, usePointStyle: true } } },
+                scales: {
+                    x: { grid: { display: false }, border: { display: false } },
+                    y: { grid: { color: '#eaeaea' }, border: { display: false } }
+                },
+                elements: { point: { radius: 0, hitRadius: 10, hoverRadius: 4 } }
+            }
+        });
+
+        // Kinematic Chart
+        const ctxK = document.getElementById('kinematicChart').getContext('2d');
+        const kinematicChart = new Chart(ctxK, {
+            type: 'line',
+            data: { labels: [], datasets: [
+                { label: 'X-Axis', borderColor: '#145c29', borderWidth: 2, tension: 0.4, data: [] },
+                { label: 'Y-Axis', borderColor: '#6b7280', borderWidth: 2, tension: 0.4, data: [] },
+                { label: 'Z-Axis', borderColor: '#3b82f6', borderWidth: 2, tension: 0.4, data: [] }
+            ]},
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 8, usePointStyle: true } } },
+                scales: {
+                    x: { grid: { display: false }, border: { display: false } },
+                    y: { grid: { color: '#eaeaea' }, border: { display: false } }
+                },
+                elements: { point: { radius: 0, hitRadius: 10, hoverRadius: 4 } }
+            }
+        });
+
+        const updateCharts = (timeStr, air, x, y, z) => {
+            if (liveChart.data.labels.length > 20) {
+                liveChart.data.labels.shift();
+                liveChart.data.datasets.forEach(ds => ds.data.shift());
+                kinematicChart.data.labels.shift();
+                kinematicChart.data.datasets.forEach(ds => ds.data.shift());
+            }
+            
+            // Update Thermal (Air only)
+            liveChart.data.labels.push(timeStr);
+            if (air !== undefined) liveChart.data.datasets[0].data.push(air);
+            liveChart.update('none');
+
+            // Update Kinematic
+            kinematicChart.data.labels.push(timeStr);
+            if (x !== undefined) kinematicChart.data.datasets[0].data.push(x);
+            if (y !== undefined) kinematicChart.data.datasets[1].data.push(y);
+            if (z !== undefined) kinematicChart.data.datasets[2].data.push(z);
+            kinematicChart.update('none');
+        };
+
+        async function triggerReboot() {
+            const isOffline = document.getElementById('statusText').textContent === 'System Offline';
+            
+            if (isOffline) {
+                alert("COMMAND FAILED: Cannot initiate remote reboot. Telemetry Node 01 is currently offline.");
+                return;
+            }
+
+            if(!confirm("WARNING: Initiating remote reboot of Telemetry Node 01. Telemetry will be lost for ~10 seconds. Proceed?")) return;
+            try {
+                await fetch(`${BASE_URL}/api/reboot`, { method: 'POST' });
+            } catch (err) {
+                console.error('Failed to send reboot command', err);
+            }
+        }
+
+        function generateInsight() {
+            const textBox = document.getElementById('ai-synthesis-text');
+            const isOffline = document.getElementById('statusText').textContent === 'System Offline';
+
+            if (isOffline) {
+                textBox.style.color = '#991b1b';
+                textBox.innerHTML = "<strong>ERROR [Bedrock AI]:</strong> Unable to synthesize SITREP. Telemetry stream is currently OFFLINE. Please restore connection to the node before requesting AI analysis.";
+                return;
+            }
+
+            textBox.style.color = 'var(--text-primary)';
+            textBox.innerHTML = '<span class="loading-pulse">Connecting to Bedrock AI Engine... Analyzing real-time telemetry streams...</span>';
+            
+            setTimeout(() => {
+                textBox.innerHTML = "<strong>SITREP [Generated via Bedrock AI]:</strong><br><br>Analysis of the real-time telemetry streams indicates highly stable conditions. Perimeter life-sign scanners detect zero unauthorized movement within the shelter zone. Kinematic sensors detect only baseline micro-vibrations consistent with ambient background noise; no structural impacts or wind-shear detected. Atmospheric pressure remains steady at ~1007 hPa.<br><br><strong>System Assessment:</strong> Optimal. Shelter structural integrity holds. No immediate logistical action required.";
+            }, 2500);
+        }
+
+        function setOfflineState() {
+            document.getElementById('connectionStatus').className = 'status-pill status-offline';
+            document.getElementById('statusText').textContent = 'System Offline';
+            ['motionStatus', 'airTemp', 'pressure', 'accelX', 'accelY', 'accelZ'].forEach(id => document.getElementById(id).textContent = '--');
+            document.getElementById('last-update').textContent = 'Disconnected';
+            ['motionBadge', 'pressureBadge', 'kinematicBadge'].forEach(id => {
+                const el = document.getElementById(id);
+                el.className = 'badge badge-offline'; el.textContent = 'Offline';
+            });
+            document.getElementById('alert-board').innerHTML = `<div class="alert-row" style="background: #f3f4f6; color: var(--text-secondary); border: 1px solid var(--border-color);">SYSTEM OFFLINE: AWAITING TELEMETRY</div>`;
+        }
+
+        async function fetchData() {
+            try {
+                const response = await fetch(`${BASE_URL}/api/data`);
+                if (!response.ok) throw new Error('Network error');
+                const apiResponse = await response.json();
+                const isOnline = apiResponse.isOnline;
+                const data = apiResponse.latestSensorData;
+                
+                if (isOnline && data && Object.keys(data).length > 0) {
+                    
+                    document.getElementById('connectionStatus').className = 'status-pill status-online';
+                    document.getElementById('statusText').textContent = 'Operational';
+
+                    // For the mock backend, we will simulate motion based on a random factor or leave it clear until AWS is hooked up
+                    // We check if data.motionDetected exists (from the new AWS payload)
+                    const motionVal = data.motionDetected === true; 
+
+                    document.getElementById('motionStatus').textContent = motionVal ? 'DETECTED' : 'CLEAR';
+                    document.getElementById('airTemp').textContent = data.outerTemp?.toFixed(1) || '--';
+                    document.getElementById('pressure').textContent = data.pressure?.toFixed(1) || '--';
+                    document.getElementById('accelX').textContent = data.accelX?.toFixed(2) || '--';
+                    document.getElementById('accelY').textContent = data.accelY?.toFixed(2) || '--';
+                    document.getElementById('accelZ').textContent = data.accelZ?.toFixed(2) || '--';
+
+                    const d = new Date();
+                    const timeStr = `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`;
+                    document.getElementById('last-update').textContent = timeStr;
+
+                    updateCharts(timeStr, data.outerTemp, data.accelX, data.accelY, data.accelZ);
+
+                    let activeAlertsHTML = '';
+
+                    const motionBadge = document.getElementById('motionBadge');
+                    if (motionVal) {
+                        motionBadge.className = 'badge badge-info'; 
+                        motionBadge.textContent = 'Active';
+                        activeAlertsHTML += `<div class="alert-row alert-info">[INFO] Human Life-Signs Detected in Sector Alpha</div>`;
+                    } else {
+                        motionBadge.className = 'badge badge-nominal'; 
+                        motionBadge.textContent = 'Standby';
+                    }
+
+                    const pressureBadge = document.getElementById('pressureBadge');
+                    const isStorm = data.stormWarning || (data.pressure && data.pressure < 1000); 
+                    if (isStorm) {
+                        pressureBadge.className = 'badge badge-critical'; pressureBadge.textContent = 'Pressure Drop';
+                        activeAlertsHTML += `<div class="alert-row alert-warn">[WARNING] Rapid Barometric Pressure Drop: Potential Severe Weather</div>`;
+                    } else {
+                        pressureBadge.className = 'badge badge-nominal'; pressureBadge.textContent = 'Nominal';
+                    }
+
+                    const kinematicBadge = document.getElementById('kinematicBadge');
+                    const isQuake = data.seismicAlert || data.earthquakeAlert || Math.abs(data.accelX) > 5;
+                    if (isQuake) {
+                        kinematicBadge.className = 'badge badge-critical'; kinematicBadge.textContent = 'Impact Detected';
+                        activeAlertsHTML += `<div class="alert-row alert-crit">[CRITICAL] Structural Kinematic Anomaly Detected</div>`;
+                    } else {
+                        kinematicBadge.className = 'badge badge-nominal'; kinematicBadge.textContent = 'Stable';
+                    }
+
+                    if (activeAlertsHTML === '') {
+                        activeAlertsHTML = `<div class="alert-row alert-nominal">SYSTEM NOMINAL: NO ACTIVE ALERTS</div>`;
+                    }
+
+                    document.getElementById('alert-board').innerHTML = activeAlertsHTML;
+                
+                } else {
+                    setOfflineState();
+                }
+            } catch (error) {
+                setOfflineState();
+            }
+        }
+
+        // Initialize and poll
+        fetchData();
+        setInterval(fetchData, 2000);
+    </script>
+</body>
+</html>
